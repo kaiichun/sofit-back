@@ -61,8 +61,8 @@ router.post("/", authMiddleware, async (request, response) => {
       clientPackage: request.body.clientPackage,
       sessions: request.body.sessions,
     });
-    await newVideo.save();
-    response.status(200).send(newVideo);
+    await newClient.save();
+    response.status(200).send(newClient);
   } catch (error) {
     response.status(400).send({ message: error._message });
   }

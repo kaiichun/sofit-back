@@ -87,18 +87,22 @@ const clientSchema = new Schema(
     },
     exeQ3a: {
       type: String,
+      enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       required: true,
     },
     exeQ3b: {
       type: String,
+      enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       required: true,
     },
     exeQ3c: {
       type: String,
+      enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       required: true,
     },
     exeQ3d: {
       type: String,
+      enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
       required: true,
     },
     dietQ1: {
@@ -161,11 +165,9 @@ const clientSchema = new Schema(
     },
     occupationQ2: {
       type: String,
-      required: true,
     },
     occupationQ3: {
       type: String,
-      required: true,
     },
     occupationQ4: {
       type: String,
@@ -173,11 +175,9 @@ const clientSchema = new Schema(
     },
     rQ1: {
       type: String,
-      required: true,
     },
     rQ2: {
       type: String,
-      required: true,
     },
     medQ1: {
       type: String,
@@ -193,11 +193,9 @@ const clientSchema = new Schema(
     },
     medQ4: {
       type: String,
-      required: true,
     },
     medQ5: {
       type: String,
-      required: true,
     },
     addNote: {
       type: String,
@@ -213,6 +211,7 @@ const clientSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    appointment: { type: String },
   },
 
   { timestamps: true }

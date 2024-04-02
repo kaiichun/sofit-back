@@ -106,6 +106,7 @@ router.post("/addStaff", async (request, response) => {
 router.post("/login", async (request, response) => {
   try {
     const username = request.body.username;
+    const email = request.body.email;
     const password = request.body.password;
     const user = await User.findOne({ username: username });
     if (!user) {
