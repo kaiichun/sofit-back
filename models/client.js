@@ -79,89 +79,70 @@ const clientSchema = new Schema(
     },
     exeQ1: {
       type: String,
-      required: true,
     },
     exeQ2: {
       type: String,
-      required: true,
     },
     exeQ3a: {
       type: String,
       enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      required: true,
     },
     exeQ3b: {
       type: String,
       enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      required: true,
     },
     exeQ3c: {
       type: String,
       enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      required: true,
     },
     exeQ3d: {
       type: String,
       enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      required: true,
     },
     dietQ1: {
       type: String,
       enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      required: true,
     },
     dietQ2: {
       type: String,
-      required: true,
     },
     dietQ3: {
       type: String,
       enum: ["Low", "Medium", "High"],
-      required: true,
     },
     dietQ4: {
       type: String,
       enum: ["Low", "Medium", "High"],
-      required: true,
     },
     dietQ5: {
       type: String,
       enum: ["Low", "Medium", "High"],
-      required: true,
     },
     dietQ6: {
       type: String,
       enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      required: true,
     },
     dietQ7: {
       type: String,
-      required: true,
     },
     dietQ8: {
       type: String,
-      required: true,
     },
     lifeQ1: {
       type: String,
-      required: true,
     },
     lifeQ2: {
       type: String,
       enum: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-      required: true,
     },
     lifeQ3: {
       type: String,
-      required: true,
     },
     lifeQ4: {
       type: String,
-      required: true,
     },
     occupationQ1: {
       type: String,
-      required: true,
     },
     occupationQ2: {
       type: String,
@@ -171,7 +152,6 @@ const clientSchema = new Schema(
     },
     occupationQ4: {
       type: String,
-      required: true,
     },
     rQ1: {
       type: String,
@@ -181,15 +161,12 @@ const clientSchema = new Schema(
     },
     medQ1: {
       type: String,
-      required: true,
     },
     medQ2: {
       type: String,
-      required: true,
     },
     medQ3: {
       type: String,
-      required: true,
     },
     medQ4: {
       type: String,
@@ -201,17 +178,12 @@ const clientSchema = new Schema(
       type: String,
       default: "-",
     },
-    packageValidityPeriod: {
-      type: String,
-      required: true,
-    },
-    clientPackage: { type: String, required: true },
-    sessions: { type: Number, required: true },
+    sessions: { type: Number, default: 0 },
+    packageValidityPeriod: { type: Date },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    appointment: { type: String },
   },
 
   { timestamps: true }

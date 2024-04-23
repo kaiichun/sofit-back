@@ -24,24 +24,27 @@ router.get("/", async (req, res) => {
 router.post("/", authMiddleware, async (request, response) => {
   try {
     const newClientActivity = new ClientActivity({
-      clientTitle: request.body.clientTitle,
-      clientStart: request.body.clientStart,
-      clientEnd: request.body.clientEnd,
-      clientDescribe: request.body.clientDescribe,
+      title: request.body.title,
+      start: request.body.start,
+      end: request.body.end,
+      allDay: request.body.allDay,
+      resource: request.body.resource,
       clientId: request.body.clientId,
       user: request.user.id,
     });
 
     const client = await Client.findById(request.body.clientId);
 
-    if (client.sessions > 0) {
-      client.sessions--;
-    } else {
-      return res.status(400).json({ message: "Please top up your package" });
-    }
-    if (!client) {
-      return response.status(404).json({ message: "Client not found" });
-    }
+    // if (client.sessions > 0) {
+    //   client.sessions--;
+    // } else {
+    //   return response
+    //     .status(400)
+    //     .json({ message: "Please top up your package" });
+    // }
+    // if (!client) {
+    //   return response.status(404).json({ message: "Client not found" });
+    // }
 
     const savedClientActivity = await Promise.all([
       newClientActivity.save(),

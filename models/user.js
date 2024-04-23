@@ -114,7 +114,9 @@ const userSchema = new Schema(
       type: String,
       enum: [
         "Management",
-        "Coach",
+        "Junior Trainee",
+        "Senior Trainee",
+        "Advanced Senior Trainee",
         "Sales",
         "Marketing",
         "Accounting",

@@ -9,61 +9,71 @@ const { JWT_SECRET } = require("../config.js");
 
 const authMiddleware = require("../middleware/auth.js");
 const isAdminMiddleware = require("../middleware/isAdmin.js");
+const Wage = require("../models/wage.js");
+const PMS = require("../models/pms.js");
+const Order = require("../models/order.js");
 
-router.post("/", authMiddleware, async (request, response) => {
+router.post("/", isAdminMiddleware, async (request, response) => {
   try {
-    const newClient = new Client({
-      user: request.user,
-      clientName: request.body.clientName,
-      clientGender: request.body.clientGender,
-      clientIc: request.body.clientIc,
-      clientHeight: request.body.clientHeight,
-      clientWeight: request.body.clientWeight,
-      clientEmail: request.body.clientEmail,
-      clientPhonenumber: request.body.clientPhonenumber,
-      clientEmergencycontactname: request.body.clientEmergencycontactname,
-      clientEmergencycontact: request.body.clientEmergencycontact,
-      clientAddress1: request.body.clientAddress1,
-      clientAddress2: request.body.clientAddress2,
-      clientZip: request.body.clientZip,
-      clientState: request.body.clientState,
-      exeQ1: request.body.exeQ1,
-      exeQ2: request.body.exeQ2,
-      exeQ3a: request.body.exeQ3a,
-      exeQ3b: request.body.exeQ3b,
-      exeQ3c: request.body.exeQ3c,
-      exeQ3d: request.body.exeQ3d,
-      dietQ1: request.body.dietQ1,
-      dietQ2: request.body.dietQ2,
-      dietQ3: request.body.dietQ3,
-      dietQ4: request.body.dietQ4,
-      dietQ5: request.body.dietQ5,
-      dietQ6: request.body.dietQ6,
-      dietQ7: request.body.dietQ7,
-      dietQ8: request.body.dietQ8,
-      lifeQ1: request.body.lifeQ1,
-      lifeQ2: request.body.lifeQ2,
-      lifeQ3: request.body.lifeQ3,
-      lifeQ4: request.body.lifeQ4,
-      occupationQ1: request.body.occupationQ1,
-      occupationQ2: request.body.occupationQ2,
-      occupationQ3: request.body.occupationQ3,
-      occupationQ4: request.body.occupationQ4,
-      rQ1: request.body.rQ1,
-      rQ2: request.body.rQ2,
-      medQ1: request.body.medQ1,
-      medQ2: request.body.medQ2,
-      medQ3: request.body.medQ3,
-      medQ4: request.body.medQ4,
-      medQ5: request.body.medQ5,
-      addNote: request.body.addNote,
-      packageValidityPeriod: request.body.packageValidityPeriod,
-      sessions: request.body.sessions,
+    // Check if the user making the request is an admin with the appropriate role
+    const user = await User.findById(request.user);
+    if (!user || !(user.role === "Admin Branch" || user.role === "Admin HQ")) {
+      return response.status(403).json({
+        message:
+          "Only admin users with role 'Admin Branch' or 'Admin HQ' can create wages.",
+      });
+    }
+
+    let selectedUser = null;
+    if (request.body.user) {
+      selectedUser = await User.findById(request.body.user);
+      if (!selectedUser) {
+        return response
+          .status(404)
+          .json({ message: "Selected user not found" });
+      }
+    }
+
+    // Check if the provided pms and order IDs match the IDs of the selected user
+    if (
+      selectedUser &&
+      (request.body.pms.user.toString() !== selectedUser._id.toString() ||
+        request.body.order.user.toString() !== selectedUser._id.toString())
+    ) {
+      return response.status(400).json({
+        message:
+          "Provided PMS or Order ID does not match the selected user's ID.",
+      });
+    }
+
+    // Create a new staff wage object
+    const newStaffWage = new Wage({
+      user: selectedUser ? selectedUser._id : null,
+      pms: request.body.pms,
+      order: request.body.order,
+      month: request.body.month,
+      year: request.body.year,
+      basic: request.body.basic,
+      coachingFee: request.body.coachingFee,
+      epf: request.body.epf,
+      socso: request.body.socso,
+      eis: request.body.eis,
+      pcd: request.body.pcd,
+      allowance: request.body.allowance,
+      claims: request.body.claims,
+      employerEpf: request.body.employerEpf,
+      employerSocso: request.body.employerSocso,
+      employerEis: request.body.employerEis,
+      totalIncome: request.body.totalIncome,
+      overtime: request.body.overtime,
+      nettPay: request.body.nettPay,
     });
-    await newClient.save();
-    response.status(200).send(newClient);
+
+    await newStaffWage.save();
+
+    response.status(200).send(newStaffWage);
   } catch (error) {
-    response.status(400).send({ message: error._message });
+    response.status(400).send({ message: error.message });
   }
 });
 
@@ -72,7 +82,7 @@ router.get("/", async (request, response) => {
     const { keyword } = request.query;
     let filter = {};
     if (keyword) {
-      filter.clientName = { $regex: keyword, $options: "i" };
+      filter.user.name = { $regex: keyword, $options: "i" };
     }
     response
       .status(200)

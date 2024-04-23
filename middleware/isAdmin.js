@@ -18,7 +18,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     // if user exists, but not an admin
-    if (user.role !== "Admin") {
+    if (user.role !== "Admin HQ" && user.role !== "Admin Branch") {
       return res.status(400).send({ message: "You're not an admin" });
     }
 

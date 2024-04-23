@@ -13,19 +13,11 @@ const clientActivitySchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    clientTitle: {
-      type: String,
-      required: true,
-    },
-    clientStart: {
-      type: Date,
-      required: true,
-    },
-    clientEnd: {
-      type: Date,
-      required: true,
-    },
-    clientDescribe: { type: String },
+    title: { type: String },
+    start: { type: Date },
+    end: { type: Date },
+    allDay: { type: Boolean },
+    resource: { type: Schema.Types.Mixed },
   },
   { timestamps: true }
 );

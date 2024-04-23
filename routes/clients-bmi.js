@@ -24,7 +24,7 @@ router.post("/", authMiddleware, async (request, response) => {
       clientImageRight: request.body.clientImageRight,
       clientVideo: request.body.clientVideo,
       clientId: request.body.clientId,
-      user: request.user.id,
+      user: request.user,
     });
     const savedClientBmi = await newClientBmi.save();
     response.status(200).send(savedClientBmi);
