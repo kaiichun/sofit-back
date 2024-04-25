@@ -60,14 +60,13 @@ app.use("/orderspackage", orderPackageRouter);
 app.use("/products", productRouter);
 app.use("/packages", packageRouter);
 app.use("/clients-composition", clientBmiRouter);
-app.use("./wage", wageRouter);
+app.use("/wage", wageRouter);
 app.use("/uploadimage", uploadImageRouter);
 app.use("/uploadclientimagefront", uploadClientImageFrontRouter);
 app.use("/uploadclientimageback", uploadClientImageBackRouter);
 app.use("/uploadclientimageleft", uploadClientImageLeftRouter);
 app.use("/uploadclientimageright", uploadClientImageRightRouter);
 app.use("/uploadclientvideo", uploadClientVideoRouter);
-// app.use("/uploadproductimage", uploadProductImageRouter);
 app.use("/images", uploadProductImageRouter);
 
 app.use("/image", express.static("image"));
@@ -76,7 +75,6 @@ app.use("/clientimageback", express.static("clientImageBack"));
 app.use("/clientimageleft", express.static("clientImageLeft"));
 app.use("/clientimageright", express.static("clientImageRight"));
 app.use("/clientvideo", express.static("clientVideo"));
-// app.use("/productimage", express.static("productImage"));
 app.use("/uploads", express.static("uploads"));
 
 app.get("/", (request, response) => {

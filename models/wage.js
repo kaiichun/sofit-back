@@ -15,21 +15,36 @@ const wageSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "PMS",
     },
-    order: {
-      type: Schema.Types.ObjectId,
-      ref: "Order",
+    staffId: {
+      type: String,
+    },
+    payslipNo: {
+      type: String,
+    },
+    name: {
+      type: String,
+    },
+    ic: {
+      type: String,
       required: true,
     },
+    totalpms: {
+      type: Number,
+    },
+    // order: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "Order",
+    // },
     basic: {
       type: Number,
       require: true,
     },
     month: {
-      type: Date,
+      type: String,
       require: true,
     },
     year: {
-      type: Date,
+      type: String,
       require: true,
     },
     coachingFee: {
@@ -50,15 +65,12 @@ const wageSchema = new Schema(
     },
     pcd: {
       type: Number,
-      require: true,
     },
     allowance: {
       type: Number,
-      require: true,
     },
     claims: {
       type: Number,
-      require: true,
     },
     employerEpf: {
       type: Number,
@@ -76,14 +88,36 @@ const wageSchema = new Schema(
       type: Number,
       require: true,
     },
-    overtime: { type: Number, require: true },
+    overtime: { type: Number },
+
     totalDeduction: {
       type: Number,
-      require: true,
+    },
+    commission: {
+      type: Number,
     },
     nettPay: {
       type: Number,
-      require: true,
+    },
+    bankname: {
+      type: String,
+      required: true,
+    },
+    bankacc: {
+      type: String,
+      required: true,
+    },
+    epfNo: {
+      type: String,
+      required: true,
+    },
+    socsoNo: {
+      type: String,
+      required: true,
+    },
+    eisNo: {
+      type: Number,
+      required: true,
     },
   },
   { timestamps: true }
