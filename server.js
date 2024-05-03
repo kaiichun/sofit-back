@@ -41,6 +41,8 @@ const orderPackageRouter = require("./routes/package-order.js");
 const packageRouter = require("./routes/package.js");
 const clientBmiRouter = require("./routes/clients-bmi.js");
 const wageRouter = require("./routes/wage.js");
+const commentRouter = require("./routes/comments.js");
+const postRouter = require("./routes/post.js");
 const uploadImageRouter = require("./routes/image.js");
 const uploadClientImageFrontRouter = require("./routes/clients-bmi-image-front.js");
 const uploadClientImageBackRouter = require("./routes/clients-bmi-image-back.js");
@@ -48,6 +50,7 @@ const uploadClientImageLeftRouter = require("./routes/clients-bmi-image-left.js"
 const uploadClientImageRightRouter = require("./routes/clients-bmi-image-right.js");
 const uploadClientVideoRouter = require("./routes/clients-bmi-video.js");
 const uploadProductImageRouter = require("./routes/product-image.js");
+const uploadPostImageRouter = require("./routes/postimage.js");
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
@@ -68,6 +71,9 @@ app.use("/uploadclientimageleft", uploadClientImageLeftRouter);
 app.use("/uploadclientimageright", uploadClientImageRightRouter);
 app.use("/uploadclientvideo", uploadClientVideoRouter);
 app.use("/images", uploadProductImageRouter);
+app.use("/uploadpostimage", uploadPostImageRouter);
+app.use("/comments", commentRouter);
+app.use("/posts", postRouter);
 
 app.use("/image", express.static("image"));
 app.use("/clientimagefront", express.static("clientImageFront"));
@@ -76,6 +82,7 @@ app.use("/clientimageleft", express.static("clientImageLeft"));
 app.use("/clientimageright", express.static("clientImageRight"));
 app.use("/clientvideo", express.static("clientVideo"));
 app.use("/uploads", express.static("uploads"));
+app.use("/postimage", express.static("postimage"));
 
 app.get("/", (request, response) => {
   response.send("Home");

@@ -101,6 +101,7 @@ router.post("/", isAdminMiddleware, async (request, response) => {
       employerSocso: request.body.employerSocso,
       employerEis: request.body.employerEis,
       totalIncome: request.body.totalIncome,
+      totalDeduction: request.body.totalDeduction,
       overtime: request.body.overtime,
       nettPay: request.body.nettPay,
     });

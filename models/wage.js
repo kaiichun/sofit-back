@@ -20,9 +20,11 @@ const wageSchema = new Schema(
     },
     payslipNo: {
       type: String,
+      required: true,
     },
     name: {
       type: String,
+      required: true,
     },
     ic: {
       type: String,
@@ -117,7 +119,6 @@ const wageSchema = new Schema(
     },
     eisNo: {
       type: Number,
-      required: true,
     },
   },
   { timestamps: true }

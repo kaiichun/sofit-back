@@ -22,6 +22,28 @@ const orderPackageSchema = new Schema({
       ref: "Package",
     },
   ],
+  paymentMethod: {
+    type: String,
+    default: "Full payment",
+    enum: ["Full payment", "Installment"],
+  },
+  installmentMonth: {
+    type: Number,
+    default: 1,
+    enum: [1, 2, 3],
+  },
+  installmentAmount1: {
+    type: Number,
+  },
+  installmentAmount2: {
+    type: Number,
+  },
+  installmentAmount3: {
+    type: Number,
+  },
+  outstanding: {
+    type: Number,
+  },
   tax: {
     type: Number,
     required: true,

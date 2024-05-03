@@ -10,12 +10,12 @@ const { JWT_SECRET } = require("../config.js");
 const authMiddleware = require("../middleware/auth.js");
 const isAdminMiddleware = require("../middleware/isAdmin.js");
 
-router.get("/:id", authMiddleware, async (request, response) => {
+router.get("/:id", async (request, response) => {
   try {
-    const data = await PMS.findOne({ _id: request.params.id });
+    const data = await PMS.findOne({ _id: request.params.id }).populate("user");
     response.status(200).send(data);
   } catch (error) {
-    response.status(400).send({ message: "Order not found" });
+    response.status(400).send({ message: error._message });
   }
 });
 
@@ -38,7 +38,7 @@ router.post("/", authMiddleware, async (request, response) => {
   try {
     const newPMS = new PMS({
       month: request.body.month,
-      week: request.body.week,
+      // week: request.body.week,
       year: request.body.year,
       renewalAndReferred1: request.body.renewalAndReferred1,
       renewalAndReferred2: request.body.renewalAndReferred2,
@@ -87,6 +87,7 @@ router.post("/", authMiddleware, async (request, response) => {
       sectionB: request.body.sectionB,
       bonus: request.body.bonus,
       total: request.body.total,
+      name: request.body.name,
       user: request.user,
     });
     const savedPMS = await newPMS.save();

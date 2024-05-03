@@ -58,7 +58,9 @@ router.post("/", authMiddleware, async (request, response) => {
       medQ5: request.body.medQ5,
       addNote: request.body.addNote,
       packageValidityPeriod: request.body.packageValidityPeriod,
-      sessions: request.body.sessions,
+
+      coachId: request.body.coachId,
+      coachName: request.body.coachName,
     });
     await newClient.save();
     response.status(200).send(newClient);

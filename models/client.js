@@ -180,6 +180,14 @@ const clientSchema = new Schema(
     },
     sessions: { type: Number, default: 0 },
     packageValidityPeriod: { type: Date },
+    coachId: {
+      type: String,
+      required: true,
+    },
+    coachName: {
+      type: String,
+      required: true,
+    },
     user: {
       type: Schema.Types.ObjectId,
       ref: "User",

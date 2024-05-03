@@ -206,6 +206,12 @@ router.post("/", authMiddleware, async (request, response) => {
       totalPrice: request.body.totalPrice,
       clientId: request.body.clientId,
       invoiceNo: invoiceNo,
+      paymentMethod: request.body.paymentMethod,
+      installmentMonth: request.body.installmentMonth,
+      installmentAmount1: request.body.installmentAmount1,
+      installmentAmount2: request.body.installmentAmount2,
+      installmentAmount3: request.body.installmentAmount3,
+      outstanding: request.body.outstanding,
       tax: request.body.tax,
       paid_at: request.body.paid_at,
     });
@@ -256,9 +262,13 @@ router.put("/:id", isAdminMiddleware, async (request, response) => {
   try {
     const order_id = request.params.id;
 
-    const updatedOrder = await Order.findByIdAndUpdate(order_id, request.body, {
-      new: true,
-    });
+    const updatedOrder = await OrderPackage.findByIdAndUpdate(
+      order_id,
+      request.body,
+      {
+        new: true,
+      }
+    );
     response.status(200).send(updatedOrder);
   } catch (error) {
     response.status(400).send({ message: error._message });
@@ -269,7 +279,7 @@ router.delete("/:id", isAdminMiddleware, async (request, response) => {
   try {
     const order_id = request.params.id;
 
-    const deleteOrder = await Order.findByIdAndDelete(order_id);
+    const deleteOrder = await OrderPackage.findByIdAndDelete(order_id);
     response.status(200).send(deleteOrder);
   } catch (error) {
     response.status(400).send({ message: error._message });

@@ -13,10 +13,10 @@ const pmsSchema = new Schema(
       type: String,
       require: true,
     },
-    week: {
-      type: String,
-      require: true,
-    },
+    // week: {
+    //   type: String,
+    //   require: true,
+    // },
     year: {
       type: String,
       require: true,
@@ -161,6 +161,9 @@ const pmsSchema = new Schema(
       type: String,
     },
     total: {
+      type: String,
+    },
+    name: {
       type: String,
     },
   },

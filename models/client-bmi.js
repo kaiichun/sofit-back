@@ -26,19 +26,24 @@ const ClientBmiSchema = new Schema(
     },
     clientImageFront: {
       type: String,
+      default: "clientImageFront/sofit-white.png",
     },
     clientImageBack: {
       type: String,
+      default: "clientImageBack/sofit-white.png",
     },
     clientImageLeft: {
       type: String,
+      default: "clientImageLeft/sofit-white.png",
     },
     clientImageRight: {
       type: String,
+      default: "clientImageRight/sofit-white.png",
     },
 
     clientVideo: {
       type: String,
+      default: "clientVideo/sofit-white.png",
     },
     clientId: {
       type: Schema.Types.ObjectId,
