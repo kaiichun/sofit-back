@@ -108,17 +108,23 @@ router.post("/login", async (request, response) => {
     const username = request.body.username;
     const email = request.body.email;
     const password = request.body.password;
-    const user = await User.findOne({ username: username });
+
+    // Find the user by username or email combined
+    const user = await User.findOne({
+      $or: [{ username: username }, { email: email }],
+    });
+
     if (!user) {
       return response
         .status(400)
-        .send({ message: "Invalid username or password" });
+        .send({ message: "Invalid username, email or password" });
     }
+
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
     if (!isPasswordCorrect) {
       return response
         .status(400)
-        .send({ message: "Invalid username or password" });
+        .send({ message: "Invalid username, email or password" });
     }
     const token = jwt.sign({ _id: user._id }, JWT_SECRET);
     response.status(200).send({

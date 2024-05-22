@@ -31,6 +31,7 @@ const postSchema = new Schema(
       type: String,
       enum: ["Draft", "Publish"],
       default: "Draft",
+      required: true,
     },
   },
   { timestamps: true }

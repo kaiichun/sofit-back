@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Branch = require("./branch");
 const { Schema, model } = mongoose;
 
 const userSchema = new Schema(
@@ -123,13 +124,11 @@ const userSchema = new Schema(
         "Other",
       ],
       required: true,
-      default: "Coach",
+      default: "Junior Trainee",
     },
     branch: {
-      type: String,
-      enum: ["Setia Alam", "Other"],
-      default: "Setia Alam",
-      required: true,
+      type: Schema.Types.ObjectId,
+      ref: "Branch",
     },
     role: {
       type: String,
@@ -144,6 +143,18 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+
+userSchema.post("save", async function () {
+  // retrieve the current id that is updated
+  const userID = this._id;
+  const branchID = this.branch;
+  // find the selected category
+  const selectedBranch = await Branch.findById(branchID);
+  // add the task into the selected category
+  selectedBranch.tasks.push(userID);
+  // save the category
+  await selectedBranch.save();
+});
 
 const User = model("User", userSchema);
 module.exports = User;

@@ -31,6 +31,7 @@ mongoose
 
 const authRouter = require("./routes/auth.js");
 const userRouter = require("./routes/users.js");
+const branchRouter = require("./routes/branch.js");
 const clientRouter = require("./routes/clients.js");
 const appointmentRouter = require("./routes/calendar.js");
 const activityRouter = require("./routes/activity.js");
@@ -54,6 +55,7 @@ const uploadPostImageRouter = require("./routes/postimage.js");
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
+app.use("/branch", branchRouter);
 app.use("/clients", clientRouter);
 app.use("/appointment", appointmentRouter);
 app.use("/activity", activityRouter);

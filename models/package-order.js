@@ -61,6 +61,18 @@ const orderPackageSchema = new Schema({
     type: Date,
     required: true,
   },
+  month: {
+    type: String,
+    require: true,
+  },
+  year: {
+    type: String,
+    require: true,
+  },
+  day: {
+    type: String,
+    require: true,
+  },
 });
 
 const OrderPackage = model("OrderPackage", orderPackageSchema);

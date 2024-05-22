@@ -213,6 +213,9 @@ router.post("/", authMiddleware, async (request, response) => {
       installmentAmount3: request.body.installmentAmount3,
       outstanding: request.body.outstanding,
       tax: request.body.tax,
+      year: request.body.year,
+      month: request.body.month,
+      day: request.body.day,
       paid_at: request.body.paid_at,
     });
 

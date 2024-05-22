@@ -58,7 +58,6 @@ router.post("/", authMiddleware, async (request, response) => {
       medQ5: request.body.medQ5,
       addNote: request.body.addNote,
       packageValidityPeriod: request.body.packageValidityPeriod,
-
       coachId: request.body.coachId,
       coachName: request.body.coachName,
     });
