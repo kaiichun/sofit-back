@@ -46,6 +46,21 @@ router.put("/:id", authMiddleware, async (request, response) => {
   }
 });
 
+router.put("/admin/:id", isAdminMiddleware, async (request, response) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      request.params.id,
+      {
+        $set: request.body,
+      },
+      { new: true }
+    );
+    response.status(200).send(updatedUser);
+  } catch (error) {
+    response.status(400).send({ message: error.message });
+  }
+});
+
 router.put("/like/:postId", authMiddleware, async (request, response) => {
   const user = request.user.id;
   const postId = request.params.postId;

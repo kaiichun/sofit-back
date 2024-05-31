@@ -1,53 +1,51 @@
 const express = require("express");
 const router = express.Router();
 const Client = require("../models/client.js");
+const Calendar2 = require("../models/calendar.js");
 const User = require("../models/user.js");
 const authMiddleware = require("../middleware/auth.js");
 
 router.get("/", async (req, res) => {
   try {
-    const events = await Client.find({});
+    const events = await Calendar2.find({});
     res.status(200).json(events);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-router.get("/:id", async (req, res) => {
-  const id = req.params.id;
+router.post("/", authMiddleware, async (request, response) => {
   try {
-    const event = await Client.findById(id);
-    if (event) {
-      res.status(200).json(event);
-    } else {
-      res.status(404).json({ message: "Event not found" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-router.post("/", authMiddleware, async (req, res) => {
-  try {
-    const newAppointments = new Client({
-      user: req.user,
-      appointment: req.body.appointment,
-      sessions: req.body.sessions,
+    const newCalendar = new Calendar2({
+      title: request.body.title,
+      clientId: request.body.clientId,
+      startTime: request.body.startTime,
+      endTime: request.body.endTime,
+      user: request.user.id,
+      appointmentDate: request.body.appointmentDate,
     });
 
-    if (newAppointments.sessions > 0) {
-      newAppointments.sessions--;
+    const client = await Client.findById(request.body.clientId);
+
+    if (client.sessions > 0) {
+      client.sessions--;
+    } else {
+      return response
+        .status(400)
+        .json({ message: "Please top up your package" });
+    }
+    if (!client) {
+      return response.status(404).json({ message: "Client not found" });
     }
 
-    if (newAppointments.sessions === 0) {
-      return res.status(400).json({ message: "Please top up your package" });
-    }
+    const savedClientActivity = await Promise.all([
+      newCalendar.save(),
+      client.save(),
+    ]);
 
-    await newAppointments.save();
-
-    res.status(200).json(newAppointments);
+    response.status(200).send(savedClientActivity);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    response.status(400).send({ message: error._message });
   }
 });
 
@@ -71,31 +69,55 @@ router.post("/staff-activity", authMiddleware, async (req, res) => {
 
 router.put("/:id", authMiddleware, async (request, response) => {
   try {
-    const clientID = await Client.findById(request.params.id).populate("user");
-    if (request.user.id === clientID.user.id) {
-      const updatedClientBmi = await Client.findByIdAndUpdate(
-        clientID,
-        request.body,
-        {
-          new: true,
-        }
-      );
-      response.status(200).send(updatedClientBmi);
-    }
+    const clientID = await Calendar2.findById(request.params.id).populate(
+      "user"
+    );
+
+    const updatedClientBmi = await Calendar2.findByIdAndUpdate(
+      clientID,
+      request.body,
+      {
+        new: true,
+      }
+    );
+    response.status(200).send(updatedClientBmi);
   } catch (error) {
     response.status(400).send({ message: error._message });
   }
 });
 
-router.delete("/:id/delete", async (req, res) => {
+router.get("/:id", async (request, response) => {
+  try {
+    const data = await Calendar2.findOne({ _id: request.params.id }).populate(
+      "user"
+    );
+    response.status(200).send(data);
+  } catch (error) {
+    response.status(400).send({ message: error._message });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const deletedEvent = await Client.findByIdAndRemove(id);
-    if (deletedEvent) {
-      res.status(200).json("Event has been deleted");
-    } else {
-      res.status(404).json({ message: "Event not found" });
+    // Find and delete the event
+    const deletedEvent = await Calendar2.findByIdAndRemove(id);
+
+    if (!deletedEvent) {
+      return res.status(404).json({ message: "Event not found" });
     }
+
+    // Find the associated client
+    const client = await Client.findById(request.body.clientId);
+
+    // Increment sessions count
+    client.sessions++;
+
+    // Save the updated client
+    await client.save();
+
+    // Respond with success message
+    res.status(200).json("Event has been canceled, session restored");
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

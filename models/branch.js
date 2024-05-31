@@ -26,30 +26,6 @@ const branchSchema = new Schema({
       ref: "User",
     },
   ],
-  //   order: [
-  //     {
-  //       type: Schema.Types.ObjectId,
-  //       ref: "Order",
-  //     },
-  //   ],
-  //   orderPackage: [
-  //     {
-  //       type: Schema.Types.ObjectId,
-  //       ref: "OrderPackage",
-  //     },
-  //   ],
-  //   wage: [
-  //     {
-  //       type: Schema.Types.ObjectId,
-  //       ref: "Wage",
-  //     },
-  //   ],
-  //   pms: [
-  //     {
-  //       type: Schema.Types.ObjectId,
-  //       ref: "Wage",
-  //     },
-  //   ],
 });
 
 const Branch = model("Branch", branchSchema);

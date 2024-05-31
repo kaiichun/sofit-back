@@ -7,53 +7,42 @@ const clientSchema = new Schema(
   {
     clientName: {
       type: String,
-      required: true,
     },
     clientGender: {
       type: String,
       enum: ["Male", "Female"],
       default: "Male",
-      required: true,
     },
     clientIc: {
       type: String,
-      required: true,
     },
     clientHeight: {
       type: Number,
-      required: true,
     },
     clientWeight: {
       type: Number,
-      required: true,
     },
     clientEmail: {
       type: String,
-      required: true,
       unique: true,
     },
     clientPhonenumber: {
       type: Number,
-      required: true,
     },
     clientEmergencycontactname: {
       type: String,
-      required: true,
     },
     clientEmergencycontact: {
       type: Number,
-      required: true,
     },
     clientAddress1: {
       type: String,
-      required: true,
     },
     clientAddress2: {
       type: String,
     },
     clientZip: {
       type: Number,
-      required: true,
     },
     clientState: {
       type: String,
@@ -74,7 +63,6 @@ const clientSchema = new Schema(
         "Sabah",
         "Sarawak",
       ],
-      required: true,
       default: "Selangor",
     },
     exeQ1: {
@@ -182,11 +170,9 @@ const clientSchema = new Schema(
     packageValidityPeriod: { type: Date },
     coachId: {
       type: String,
-      required: true,
     },
     coachName: {
       type: String,
-      required: true,
     },
     user: {
       type: Schema.Types.ObjectId,

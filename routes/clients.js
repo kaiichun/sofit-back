@@ -111,16 +111,14 @@ router.get("/:id", async (request, response) => {
 router.put("/:id", authMiddleware, async (request, response) => {
   try {
     const clientID = await Client.findById(request.params.id).populate("user");
-    if (request.user.id === clientID.user.id) {
-      const updatedClient = await Client.findByIdAndUpdate(
-        clientID,
-        request.body,
-        {
-          new: true,
-        }
-      );
-      response.status(200).send(updatedClient);
-    }
+    const updatedClient = await Client.findByIdAndUpdate(
+      clientID,
+      request.body,
+      {
+        new: true,
+      }
+    );
+    response.status(200).send(updatedClient);
   } catch (error) {
     response.status(400).send({ message: error._message });
   }

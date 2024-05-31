@@ -6,56 +6,46 @@ const userSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
     },
     username: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
       required: true,
       unique: true,
+      match: /.+\@.+\..+/,
     },
     password: {
       type: String,
-      required: true,
     },
     ic: {
       type: String,
-      required: true,
     },
     dob: {
       type: String,
-      required: true,
     },
     gender: {
       type: String,
       enum: ["Male", "Female"],
       default: "Male",
-      required: true,
     },
     relationship: {
       type: String,
       enum: ["Single", "In love", "Married", "Widowed", "Others"],
       default: "Single",
-      required: true,
     },
     phonenumber: {
       type: Number,
-      required: true,
     },
     staffemergencycontactname: {
       type: String,
-      required: true,
     },
     staffemergencycontact: {
       type: Number,
-      required: true,
     },
     address1: {
       type: String,
-      required: true,
     },
     address2: {
       type: String,
@@ -63,7 +53,6 @@ const userSchema = new Schema(
     },
     zip: {
       type: Number,
-      required: true,
     },
     state: {
       type: String,
@@ -84,32 +73,25 @@ const userSchema = new Schema(
         "Sabah",
         "Sarawak",
       ],
-      required: true,
       default: "Selangor",
     },
     image: {
       type: String,
-      required: true,
     },
     bankname: {
       type: String,
-      required: true,
     },
     bankacc: {
       type: String,
-      required: true,
     },
     epf: {
       type: String,
-      required: true,
     },
     socso: {
       type: String,
-      required: true,
     },
     salary: {
       type: Number,
-      required: true,
     },
     department: {
       type: String,
@@ -123,7 +105,6 @@ const userSchema = new Schema(
         "Accounting",
         "Other",
       ],
-      required: true,
       default: "Junior Trainee",
     },
     branch: {
@@ -134,7 +115,6 @@ const userSchema = new Schema(
       type: String,
       enum: ["Staff", "Supervisor", "Manager", "Admin HQ", "Admin Branch"],
       default: "Staff",
-      required: true,
     },
     active: {
       type: Boolean,
@@ -144,16 +124,41 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+// userSchema.post("save", async function () {
+//   // retrieve the current id that is updated
+//   const userID = this._id;
+//   const branchID = this.branch;
+//   // find the selected category
+//   const selectedBranch = await Branch.findById(branchID);
+//   // add the task into the selected category
+//   selectedBranch.user.push(userID);
+//   // save the category
+//   await selectedBranch.save();
+// });
+
+// Post-hook to handle branch change
 userSchema.post("save", async function () {
-  // retrieve the current id that is updated
   const userID = this._id;
   const branchID = this.branch;
-  // find the selected category
-  const selectedBranch = await Branch.findById(branchID);
-  // add the task into the selected category
-  selectedBranch.tasks.push(userID);
-  // save the category
-  await selectedBranch.save();
+  const previousBranchID = this._previousBranch;
+
+  if (previousBranchID && !previousBranchID.equals(branchID)) {
+    // Remove user from the previous branch
+    const previousBranch = await Branch.findById(previousBranchID);
+    if (previousBranch) {
+      previousBranch.user.pull(userID);
+      await previousBranch.save();
+    }
+  }
+
+  if (branchID) {
+    // Add user to the new branch
+    const selectedBranch = await Branch.findById(branchID);
+    if (selectedBranch) {
+      selectedBranch.user.addToSet(userID);
+      await selectedBranch.save();
+    }
+  }
 });
 
 const User = model("User", userSchema);

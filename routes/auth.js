@@ -117,14 +117,13 @@ router.post("/login", async (request, response) => {
     if (!user) {
       return response
         .status(400)
-        .send({ message: "Invalid username, email or password" });
+        .send({ message: "Invalid username or email" });
     }
 
+    // const isPasswordCorrect = password;
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
     if (!isPasswordCorrect) {
-      return response
-        .status(400)
-        .send({ message: "Invalid username, email or password" });
+      return response.status(400).send({ message: "Invalid Password" });
     }
     const token = jwt.sign({ _id: user._id }, JWT_SECRET);
     response.status(200).send({
