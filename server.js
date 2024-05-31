@@ -89,7 +89,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/postimage", express.static("postimage"));
 
 app.get("/", (request, response) => {
-  response.send("Home");
+  response.send("Home.");
 });
 
 app.listen(port, () => console.log(`Sofit Server started on port ${port}`));
