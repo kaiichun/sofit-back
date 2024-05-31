@@ -158,4 +158,35 @@ router.post("/login", async (request, response) => {
   }
 });
 
+router.post("/password", async (req, res) => {
+  try {
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
+
+    // Find the user by username or email combined
+    const user = await User.findOne({
+      $or: [{ username: username }, { email: email }],
+    });
+
+    const isPasswordCorrect = bcrypt.compareSync(password, user.password);
+    if (!isPasswordCorrect) {
+      return res.status(400).send({ message: "Invalid password" });
+    }
+
+    const newpassword = bcrypt.hashSync(req.body.newpassword, 10);
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      { password: newpassword },
+      {
+        runValidators: true,
+        new: true,
+      }
+    );
+    res.status(200).send(updatedUser);
+  } catch (error) {
+    res.status(400).send({ message: error._message });
+  }
+});
+
 module.exports = router;
