@@ -97,7 +97,7 @@ router.get("/:id", async (request, response) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authMiddleware, async (req, res) => {
   const id = req.params.id;
   try {
     // Find and delete the event
@@ -108,7 +108,11 @@ router.delete("/:id", async (req, res) => {
     }
 
     // Find the associated client
-    const client = await Client.findById(request.body.clientId);
+    const client = await Client.findById(deletedEvent.clientId);
+
+    if (!client) {
+      return res.status(404).json({ message: "Client not found" });
+    }
 
     // Increment sessions count
     client.sessions++;
