@@ -97,9 +97,10 @@ const userSchema = new Schema(
       type: String,
       enum: [
         "Management",
-        "Junior Trainee",
-        "Senior Trainee",
-        "Advanced Senior Trainee",
+        "Junior Coach",
+        "Senior Coach",
+        "Advanced Senior Coach",
+        "Master Coach",
         "Sales",
         "Marketing",
         "Accounting",

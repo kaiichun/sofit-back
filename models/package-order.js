@@ -16,12 +16,37 @@ const orderPackageSchema = new Schema({
     ref: "User",
     require: true,
   },
+  staffId: {
+    type: String,
+    require: true,
+  },
+  staffName: {
+    type: String,
+    require: true,
+  },
   packages: [
     {
       type: Schema.Types.ObjectId,
       ref: "Package",
     },
   ],
+  discountRate: {
+    type: Number,
+    default: 0,
+  },
+  discount: { type: Number },
+  payby: {
+    type: String,
+    default: "Bank Transfer",
+    enum: [
+      "Bank Transfer",
+      "Cash",
+      "Credit Card",
+      "Debit Card",
+      "E-Wallet",
+      "Merchant Services",
+    ],
+  },
   paymentMethod: {
     type: String,
     default: "Full payment",
@@ -29,18 +54,13 @@ const orderPackageSchema = new Schema({
   },
   installmentMonth: {
     type: Number,
-    default: 1,
-    enum: [1, 2, 3],
+    default: 3,
+    enum: [3, 6, 12],
   },
-  installmentAmount1: {
+  installmentAmount: {
     type: Number,
   },
-  installmentAmount2: {
-    type: Number,
-  },
-  installmentAmount3: {
-    type: Number,
-  },
+
   outstanding: {
     type: Number,
   },

@@ -195,66 +195,77 @@ router.post("/", authMiddleware, async (request, response) => {
   try {
     const invoiceNo = await generatePackageInvoiceNumber();
 
-    // Calculate expiration date based on the validity period of the selected package
-    const expirationDate = new Date();
-    expirationDate.setMonth(expirationDate.getMonth() + 3);
+    const {
+      packages,
+      clientId,
+      staffId,
+      staffName,
+      tax,
+      totalPrice,
+      paymentMethod,
+      payby,
+      installmentMonth,
+      installmentAmount,
+      outstanding,
+      discount,
+      discountRate,
+      year,
+      month,
+      day,
+      paid_at,
+    } = request.body;
 
-    const newOrderPackage = new OrderPackage({
-      user: request.user,
-      packages: request.body.packages,
-      tax: request.body.tax,
-      totalPrice: request.body.totalPrice,
-      clientId: request.body.clientId,
-      invoiceNo: invoiceNo,
-      paymentMethod: request.body.paymentMethod,
-      installmentMonth: request.body.installmentMonth,
-      installmentAmount1: request.body.installmentAmount1,
-      installmentAmount2: request.body.installmentAmount2,
-      installmentAmount3: request.body.installmentAmount3,
-      outstanding: request.body.outstanding,
-      tax: request.body.tax,
-      year: request.body.year,
-      month: request.body.month,
-      day: request.body.day,
-      paid_at: request.body.paid_at,
-    });
-
-    // If a client ID is provided, assign it to the order package
-    if (request.body.clientId) {
-      newOrderPackage.clientId = request.body.clientId;
+    const package = await Package.findById(packages);
+    if (!package) {
+      return response.status(404).json({ message: "Package not found" });
     }
 
-    const packages = await Package.findById(request.body.packages);
-    if (!packages) {
-      return response.status(404).json({ message: "packages not found" });
-    }
-
-    // Fetch the client from the database based on the client ID
-    const client = await Client.findById(request.body.clientId);
+    const client = await Client.findById(clientId);
     if (!client) {
       return response.status(404).json({ message: "Client not found" });
     }
 
+    const expirationDate = client.packageValidityPeriod
+      ? new Date(client.packageValidityPeriod)
+      : new Date();
+    expirationDate.setMonth(expirationDate.getMonth() + package.valiMonth);
+
     if (
       client.packageValidityPeriod &&
-      client.packageValidityPeriod.getTime() === expirationDate.getTime()
+      new Date(client.packageValidityPeriod).getTime() === new Date().getTime()
     ) {
       client.sessions = 0;
       client.packageValidityPeriod = null;
     } else {
-      // If it's a new order or not past the expiration date, update the client's session count
-      // Or if it's an existing order, add the new session count to the existing session count
-      client.sessions += packages.sessions;
-      // Set the client's package validity period
+      client.sessions += package.sessions;
       client.packageValidityPeriod = expirationDate;
     }
 
-    // Save the updated client object
     await client.save();
 
-    // Save the order package
-    const savedOrderPackage = await newOrderPackage.save();
+    const newOrderPackage = new OrderPackage({
+      user: request.user,
+      staffId: staffId,
+      staffName: staffName,
+      packages: packages,
+      tax: tax,
+      totalPrice: totalPrice,
+      clientId: clientId,
+      invoiceNo: invoiceNo,
+      paymentMethod: paymentMethod,
+      payby: payby,
+      installmentMonth: installmentMonth,
+      installmentAmount: installmentAmount,
+      outstanding: outstanding,
+      discount: discount,
+      discountRate: discountRate,
+      year: year,
+      month: month,
+      day: day,
+      paid_at: paid_at,
+    });
 
+    const savedOrderPackage = await newOrderPackage.save();
     response.status(200).send(savedOrderPackage);
   } catch (error) {
     response.status(400).send({ message: error.message });

@@ -40,6 +40,7 @@ router.post("/", isAdminMiddleware, async (request, response) => {
       price: request.body.price,
       sessions: request.body.sessions,
       category: request.body.category,
+      valiMonth: request.body.valiMonth,
     });
     await newPackage.save();
     response.status(200).send(newPackage);

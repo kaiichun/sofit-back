@@ -109,13 +109,17 @@ router.post("/", authMiddleware, async (request, response) => {
 
     const newOrder = new Order({
       user: request.user,
+      staffId: request.body.staffId,
+      staffName: request.body.staffName,
       products: request.body.products,
       totalPrice: request.body.totalPrice,
       name: request.body.name,
       phone: request.body.phone,
       address: request.body.address,
       status: request.body.status,
-      tax: request.body.tax,
+      // tax: request.body.tax,
+      discount: request.body.discount,
+      discountRate: request.body.discountRate,
       commission: product.commission,
       invoiceNo: invoiceNo,
       paid_at: request.body.paid_at,

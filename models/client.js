@@ -167,7 +167,7 @@ const clientSchema = new Schema(
       default: "-",
     },
     sessions: { type: Number, default: 0 },
-    packageValidityPeriod: { type: Date },
+    packageValidityPeriod: { type: Date, default: new Date() },
     coachId: {
       type: String,
     },

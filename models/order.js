@@ -15,6 +15,14 @@ const orderSchema = new Schema({
     ref: "User",
     require: true,
   },
+  staffId: {
+    type: String,
+    require: true,
+  },
+  staffName: {
+    type: String,
+    require: true,
+  },
   products: [
     {
       type: Schema.Types.ObjectId,
@@ -46,9 +54,14 @@ const orderSchema = new Schema({
     type: Number,
     required: true,
   },
-  tax: {
+  // tax: {
+  //   type: Number,
+  //   required: true,
+  // },
+  discount: { type: Number },
+  discountRate: {
     type: Number,
-    required: true,
+    default: 0,
   },
   paid_at: {
     type: Date,

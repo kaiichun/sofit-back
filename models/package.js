@@ -21,7 +21,19 @@ const packageSchema = new Schema({
   // },
   category: {
     type: String,
-    required: true,
+    enum: [
+      "Junior Coach",
+      "Senior Coach",
+      "Advanced Senior Coach",
+      "Master Coach",
+    ],
+    default: "Junior Coach",
+  },
+
+  valiMonth: {
+    type: Number,
+    default: 1,
+    enum: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
   },
 });
 
