@@ -53,6 +53,7 @@ const uploadClientImageRightRouter = require("./routes/clients-bmi-image-right.j
 const uploadClientVideoRouter = require("./routes/clients-bmi-video.js");
 const uploadProductImageRouter = require("./routes/product-image.js");
 const uploadPostImageRouter = require("./routes/postimage.js");
+const uploadClientImageRouter = require("./routes/client-image.js");
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
@@ -74,8 +75,9 @@ app.use("/uploadclientimageback", uploadClientImageBackRouter);
 app.use("/uploadclientimageleft", uploadClientImageLeftRouter);
 app.use("/uploadclientimageright", uploadClientImageRightRouter);
 app.use("/uploadclientvideo", uploadClientVideoRouter);
-app.use("/images", uploadProductImageRouter);
-app.use("/uploadpostimage", uploadPostImageRouter);
+app.use("/uploadProductImage", uploadProductImageRouter);
+app.use("/uploadPostImage", uploadPostImageRouter);
+app.use("/uploadClientImage", uploadClientImageRouter);
 app.use("/comments", commentRouter);
 app.use("/posts", postRouter);
 
@@ -85,11 +87,12 @@ app.use("/clientimageback", express.static("clientImageBack"));
 app.use("/clientimageleft", express.static("clientImageLeft"));
 app.use("/clientimageright", express.static("clientImageRight"));
 app.use("/clientvideo", express.static("clientVideo"));
-app.use("/uploads", express.static("uploads"));
-app.use("/postimage", express.static("postimage"));
+app.use("/productImage", express.static("productImage"));
+app.use("/postImage", express.static("postImage"));
+app.use("/clientImage", express.static("clientImage"));
 
 app.get("/", (request, response) => {
-  response.send("Home.");
+  response.send("Home");
 });
 
 app.listen(port, () => console.log(`Sofit Server started on port ${port}`));

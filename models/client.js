@@ -8,6 +8,9 @@ const clientSchema = new Schema(
     clientName: {
       type: String,
     },
+    clientImage: {
+      type: String,
+    },
     clientGender: {
       type: String,
       enum: ["Male", "Female"],

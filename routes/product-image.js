@@ -5,7 +5,7 @@ const multer = require("multer");
 // setup storage
 const storage = multer.diskStorage({
   destination: function (request, file, cb) {
-    cb(null, "uploads/");
+    cb(null, "productImage/");
   },
   filename: function (request, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post("/", upload.single("image"), async (request, response) => {
+router.post("/", upload.single("productImage"), async (request, response) => {
   try {
     // send back the image url
     const image_url = request.file.path;

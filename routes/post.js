@@ -14,7 +14,7 @@ router.post("/", authMiddleware, async (request, response) => {
     const newPost = new PostContent({
       user: request.user,
       content: request.body.content,
-      postimage: request.body.postimage,
+      postImage: request.body.postImage,
       likes: request.body.likes,
       unlikes: request.body.unlikes,
       status: request.body.status,
