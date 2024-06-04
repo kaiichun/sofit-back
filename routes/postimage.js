@@ -16,8 +16,8 @@ const upload = multer({ storage: storage });
 
 router.post("/", upload.single("postImage"), async (request, response) => {
   try {
-    const postimage_url = request.file.path;
-    response.status(200).send({ postimage_url: postimage_url });
+    const postImage_url = request.file.path;
+    response.status(200).send({ postImage_url: postImage_url });
   } catch (error) {
     response.status(400).send({ message: error._message });
   }

@@ -89,7 +89,7 @@ app.use("/clientimageright", express.static("clientImageRight"));
 app.use("/clientvideo", express.static("clientVideo"));
 app.use("/productImage", express.static("productImage"));
 app.use("/postImage", express.static("postImage"));
-app.use("/clientImage", express.static("clientImage"));
+app.use("/clientimage", express.static("clientImage"));
 
 app.get("/", (request, response) => {
   response.send("Home");
