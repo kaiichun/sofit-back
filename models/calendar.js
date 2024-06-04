@@ -4,7 +4,8 @@ const { Schema, model } = mongoose;
 const calendar2Schema = new Schema({
   title: {
     type: String,
-    required: true,
+    enum: ["Meeting", "Coaching"],
+    default: "Coaching",
   },
   clientId: {
     type: Schema.Types.ObjectId,

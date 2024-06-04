@@ -20,7 +20,7 @@ router.post("/", authMiddleware, async (request, response) => {
       title: request.body.title,
       clientId: request.body.clientId,
       startTime: request.body.startTime,
-      endTime: request.body.endTime,
+      // endTime: request.body.endTime,
       user: request.user.id,
       appointmentDate: request.body.appointmentDate,
     });

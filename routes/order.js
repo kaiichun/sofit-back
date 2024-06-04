@@ -9,6 +9,7 @@ const User = require("../models/user");
 const authMiddleware = require("../middleware/auth");
 const isAdminMiddleware = require("../middleware/isAdmin");
 const Product = require("../models/product");
+const Client = require("../models/client");
 
 router.get("/", authMiddleware, async (request, response) => {
   try {
@@ -107,28 +108,51 @@ router.post("/", authMiddleware, async (request, response) => {
       return response.status(404).json({ message: "Product not found" });
     }
 
+    const {
+      staffId,
+      staffName,
+      totalPrice,
+      products,
+      name,
+      phone,
+      status,
+      discount,
+      address,
+      commission,
+      discountRate,
+      month,
+      paid_at,
+      clientId,
+    } = request.body;
+
     const newOrder = new Order({
       user: request.user,
-      staffId: request.body.staffId,
-      staffName: request.body.staffName,
-      products: request.body.products,
-      totalPrice: request.body.totalPrice,
-      name: request.body.name,
-      phone: request.body.phone,
-      address: request.body.address,
-      status: request.body.status,
-      // tax: request.body.tax,
-      discount: request.body.discount,
-      discountRate: request.body.discountRate,
+      staffId: staffId,
+      staffName: staffName,
+      products: products,
+      totalPrice: totalPrice,
+      name: name,
+      phone: phone,
+      address: address,
+      status: status,
+      // tax: tax,
+      discount: discount,
+      discountRate: discountRate,
       commission: product.commission,
       invoiceNo: invoiceNo,
-      paid_at: request.body.paid_at,
-      month: request.body.month,
+      paid_at: paid_at,
+      month: month,
+      clientId: clientId,
     });
 
-    if (request.body.clientId) {
-      newOrder.clientId = request.body.clientId;
+    if (clientId) {
+      newOrder.clientId = clientId;
     }
+    const client = await Client.findById(newOrder.clientId);
+    if (!client) {
+      return response.status(404).json({ message: "Client not found" });
+    }
+    client.totalSpend += Number(totalPrice); // Incrementing totalSpend by totalPrice of the order
 
     if (product.store > 0) {
       product.store--;
@@ -139,7 +163,11 @@ router.post("/", authMiddleware, async (request, response) => {
     }
 
     // Save the order and product
-    const savedOrder = await Promise.all([newOrder.save(), product.save()]);
+    const savedOrder = await Promise.all([
+      newOrder.save(),
+      product.save(),
+      client.save(),
+    ]); // Save client too
     response.status(200).send(savedOrder);
   } catch (error) {
     response.status(400).send({ message: error.message });

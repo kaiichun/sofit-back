@@ -238,6 +238,7 @@ router.post("/", authMiddleware, async (request, response) => {
       client.packageValidityPeriod = null;
     } else {
       client.sessions += package.sessions;
+      client.totalSpend += Number(totalPrice); // Ensure totalSpend is treated as a number
       client.packageValidityPeriod = expirationDate;
     }
 
