@@ -20,10 +20,10 @@ const clientSchema = new Schema(
       type: String,
     },
     clientHeight: {
-      type: Number,
+      type: String,
     },
     clientWeight: {
-      type: Number,
+      type: String,
     },
     clientEmail: {
       type: String,
