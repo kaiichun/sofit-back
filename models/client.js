@@ -30,13 +30,13 @@ const clientSchema = new Schema(
       unique: true,
     },
     clientPhonenumber: {
-      type: Number,
+      type: String,
     },
     clientEmergencycontactname: {
       type: String,
     },
     clientEmergencycontact: {
-      type: Number,
+      type: String,
     },
     clientAddress1: {
       type: String,
@@ -45,7 +45,7 @@ const clientSchema = new Schema(
       type: String,
     },
     clientZip: {
-      type: Number,
+      type: String,
     },
     clientState: {
       type: String,
@@ -171,6 +171,7 @@ const clientSchema = new Schema(
     },
     sessions: { type: Number, default: 0 },
     packageValidityPeriod: { type: Date, default: new Date() },
+    totalSpend: { type: Number, default: 0 },
     coachId: {
       type: String,
     },
