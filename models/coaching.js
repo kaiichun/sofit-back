@@ -10,67 +10,16 @@ const coachingSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    day: { type: Date, require: true },
-    month: {
-      type: Date,
-      require: true,
+    clientId: {
+      type: Schema.Types.ObjectId,
+      ref: "Client",
     },
-    year: {
-      type: Date,
-      require: true,
+    staffId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
-    coachingFee: {
-      type: String,
-      require: true,
-    },
-    epf: {
-      type: String,
-      require: true,
-    },
-    socso: {
-      type: String,
-      require: true,
-    },
-    eis: {
-      type: String,
-      require: true,
-    },
-    pcd: {
-      type: String,
-    },
-    allowance: {
-      type: String,
-    },
-    comissions: {
-      type: String,
-    },
-    claims: {
-      type: String,
-    },
-    employerEpf: {
-      type: String,
-      require: true,
-    },
-    employerSocso: {
-      type: String,
-      require: true,
-    },
-    employerEis: {
-      type: String,
-      require: true,
-    },
-    totalIncome: {
-      type: String,
-      require: true,
-    },
-    totalDeduction: {
-      type: String,
-      require: true,
-    },
-    nettPay: {
-      type: String,
-      require: true,
-    },
+    date: { type: Date },
+    sessions: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

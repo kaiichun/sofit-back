@@ -15,6 +15,10 @@ const calendar2Schema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  staffId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
   startTime: {
     type: String,
     require: true,
