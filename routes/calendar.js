@@ -4,6 +4,7 @@ const Client = require("../models/client.js");
 const Calendar2 = require("../models/calendar.js");
 const User = require("../models/user.js");
 const authMiddleware = require("../middleware/auth.js");
+const Coaching = require("../models/coaching.js");
 
 router.get("/", async (req, res) => {
   try {
@@ -14,19 +15,40 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/coaching", async (req, res) => {
+  try {
+    const events = await Coaching.find({});
+    res.status(200).json(events);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.post("/", authMiddleware, async (request, response) => {
   try {
+    const { title, clientId, staffId, startTime, appointmentDate } =
+      request.body;
+    const userId = request.user.id;
+
+    // Create a new calendar event
     const newCalendar = new Calendar2({
-      title: request.body.title,
-      clientId: request.body.clientId,
-      startTime: request.body.startTime,
-      // endTime: request.body.endTime,
-      user: request.user.id,
-      appointmentDate: request.body.appointmentDate,
+      title,
+      clientId,
+      startTime,
+      staffId,
+      user: userId,
+      appointmentDate,
     });
 
-    const client = await Client.findById(request.body.clientId);
+    // Find the client by ID
+    const client = await Client.findById(clientId);
 
+    // Check if the client exists
+    if (!client) {
+      return response.status(404).json({ message: "Client not found" });
+    }
+
+    // Decrement the client's sessions count
     if (client.sessions > 0) {
       client.sessions--;
     } else {
@@ -34,18 +56,35 @@ router.post("/", authMiddleware, async (request, response) => {
         .status(400)
         .json({ message: "Please top up your package" });
     }
-    if (!client) {
-      return response.status(404).json({ message: "Client not found" });
+
+    // Find or create a new coaching entry for the user and client on the specified date
+    const coachingDate = new Date(appointmentDate).setHours(0, 0, 0, 0);
+    const existingCoaching = await Coaching.findOne({
+      clientId,
+      staffId,
+      date: coachingDate,
+    });
+
+    if (existingCoaching) {
+      existingCoaching.sessions++;
+      await existingCoaching.save();
+    } else {
+      const newCoaching = new Coaching({
+        user: userId,
+        staffId,
+        clientId,
+        date: coachingDate,
+        sessions: 1,
+      });
+      await newCoaching.save();
     }
 
-    const savedClientActivity = await Promise.all([
-      newCalendar.save(),
-      client.save(),
-    ]);
+    // Save the new calendar event and update the client
+    await Promise.all([newCalendar.save(), client.save()]);
 
-    response.status(200).send(savedClientActivity);
+    response.status(200).json({ message: "Session booked successfully" });
   } catch (error) {
-    response.status(400).send({ message: error._message });
+    response.status(400).send({ message: error.message });
   }
 });
 
