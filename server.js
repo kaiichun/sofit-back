@@ -77,7 +77,7 @@ app.use("/uploadclientimageright", uploadClientImageRightRouter);
 app.use("/uploadclientvideo", uploadClientVideoRouter);
 app.use("/uploadProductImage", uploadProductImageRouter);
 app.use("/uploadPostImage", uploadPostImageRouter);
-app.use("/uploadClientImage", uploadClientImageRouter);
+app.use("/uploadclientimage", uploadClientImageRouter);
 app.use("/comments", commentRouter);
 app.use("/posts", postRouter);
 
@@ -89,7 +89,7 @@ app.use("/clientimageright", express.static("clientImageRight"));
 app.use("/clientvideo", express.static("clientVideo"));
 app.use("/productImage", express.static("productImage"));
 app.use("/postImage", express.static("postImage"));
-app.use("/clientimage", express.static("clientImage"));
+app.use("/clientimage", express.static("clientimage"));
 
 app.get("/", (request, response) => {
   response.send("Home");

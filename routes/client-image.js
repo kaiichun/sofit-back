@@ -5,7 +5,7 @@ const multer = require("multer");
 // Setup storage
 const storage = multer.diskStorage({
   destination: function (request, file, cb) {
-    cb(null, "clientImage/");
+    cb(null, "clientimage/");
   },
   filename: function (request, file, cb) {
     cb(null, Date.now() + "-" + file.originalname);
@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.post("/", upload.single("clientImage"), (request, response) => {
+router.post("/", upload.single("clientimage"), (request, response) => {
   if (!request.file) {
     return response.status(400).send({ message: "No file uploaded" });
   }
