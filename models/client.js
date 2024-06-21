@@ -182,6 +182,14 @@ const clientSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    branch: {
+      type: Schema.Types.ObjectId,
+      ref: "Branch",
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
 
   { timestamps: true }

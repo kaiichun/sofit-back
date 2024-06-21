@@ -104,6 +104,7 @@ router.post("/", isAdminMiddleware, async (request, response) => {
       totalDeduction: request.body.totalDeduction,
       overtime: request.body.overtime,
       nettPay: request.body.nettPay,
+      branch: request.body.branch,
     });
 
     await newStaffWage.save();

@@ -31,6 +31,10 @@ const calendar2Schema = new Schema({
     type: Date,
     required: true,
   },
+  branch: {
+    type: Schema.Types.ObjectId,
+    ref: "Branch",
+  },
 });
 
 const Calendar2 = model("Calendar2", calendar2Schema);

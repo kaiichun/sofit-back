@@ -26,7 +26,7 @@ router.get("/coaching", async (req, res) => {
 
 router.post("/", authMiddleware, async (request, response) => {
   try {
-    const { title, clientId, staffId, startTime, appointmentDate } =
+    const { title, clientId, staffId, startTime, appointmentDate, branch } =
       request.body;
     const userId = request.user.id;
 
@@ -37,6 +37,7 @@ router.post("/", authMiddleware, async (request, response) => {
       startTime,
       staffId,
       user: userId,
+      branch,
       appointmentDate,
     });
 
@@ -119,6 +120,7 @@ router.put("/:id", authMiddleware, async (request, response) => {
         new: true,
       }
     );
+
     response.status(200).send(updatedClientBmi);
   } catch (error) {
     response.status(400).send({ message: error._message });
@@ -130,6 +132,13 @@ router.get("/:id", async (request, response) => {
     const data = await Calendar2.findOne({ _id: request.params.id }).populate(
       "user"
     );
+
+    const existingEvent = await Calendar2.findById(request.params.id);
+
+    if (!existingEvent) {
+      return response.status(404).json({ message: "Event not found" });
+    }
+
     response.status(200).send(data);
   } catch (error) {
     response.status(400).send({ message: error._message });

@@ -16,7 +16,8 @@ const orderSchema = new Schema({
     require: true,
   },
   staffId: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: "User",
     require: true,
   },
   staffName: {

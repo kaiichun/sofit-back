@@ -120,6 +120,10 @@ const wageSchema = new Schema(
     eisNo: {
       type: Number,
     },
+    branch: {
+      type: Schema.Types.ObjectId,
+      ref: "Branch",
+    },
   },
   { timestamps: true }
 );

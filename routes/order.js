@@ -149,9 +149,9 @@ router.post("/", authMiddleware, async (request, response) => {
       newOrder.clientId = clientId;
     }
     const client = await Client.findById(newOrder.clientId);
-    if (!client) {
-      return response.status(404).json({ message: "Client not found" });
-    }
+    // if (!client) {
+    //   return response.status(404).json({ message: "Client not found" });
+    // }
     client.totalSpend += Number(totalPrice); // Incrementing totalSpend by totalPrice of the order
 
     if (product.store > 0) {

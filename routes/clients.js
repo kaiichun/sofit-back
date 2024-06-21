@@ -60,6 +60,7 @@ router.post("/", authMiddleware, async (request, response) => {
       packageValidityPeriod: request.body.packageValidityPeriod,
       coachId: request.body.coachId,
       coachName: request.body.coachName,
+      branch: request.body.branch,
       clientImage: request.body.clientImage,
     });
     await newClient.save();
