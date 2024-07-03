@@ -127,6 +127,27 @@ router.put("/:id", authMiddleware, async (request, response) => {
   }
 });
 
+router.put("/update/:id", async (req, res) => {
+  const { id } = req.params;
+  const { appointmentDate, startTime } = req.body;
+
+  try {
+    const updatedAppointment = await Calendar2.findByIdAndUpdate(
+      id,
+      { appointmentDate, startTime },
+      { new: true }
+    );
+
+    if (!updatedAppointment) {
+      return res.status(404).json({ message: "Appointment not found" });
+    }
+
+    res.json(updatedAppointment);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.get("/:id", async (request, response) => {
   try {
     const data = await Calendar2.findOne({ _id: request.params.id }).populate(

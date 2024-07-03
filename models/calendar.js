@@ -23,10 +23,6 @@ const calendar2Schema = new Schema({
     type: String,
     require: true,
   },
-  //   endTime: {
-  //     type: String,
-  //     required: true,
-  //   },
   appointmentDate: {
     type: Date,
     required: true,
