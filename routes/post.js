@@ -18,6 +18,7 @@ router.post("/", authMiddleware, async (request, response) => {
       likes: request.body.likes,
       unlikes: request.body.unlikes,
       status: request.body.status,
+      editedBy: request.body.editedBy,
     });
     await newPost.save();
     response.status(200).send(newPost);
@@ -55,19 +56,14 @@ router.get("/:id", async (request, response) => {
 
 router.put("/:id", authMiddleware, async (request, response) => {
   try {
-    const contentID = await PostContent.findById(request.params.id).populate(
-      "user"
+    const updatedContent = await PostContent.findByIdAndUpdate(
+      contentID,
+      request.body,
+      {
+        new: true,
+      }
     );
-    if (request.user.id === contentID.user.id) {
-      const updatedContent = await PostContent.findByIdAndUpdate(
-        contentID,
-        request.body,
-        {
-          new: true,
-        }
-      );
-      response.status(200).send(updatedContent);
-    }
+    response.status(200).send(updatedContent);
   } catch (error) {
     response.status(400).send({ message: error._message });
   }
