@@ -104,14 +104,14 @@ router.put("/unlike/:postId", authMiddleware, async (request, response) => {
   }
 });
 
-router.delete("/:id", isAdminMiddleware, async (request, response) => {
-  try {
-    const product_id = request.params.id;
-    const deleteProduct = await User.findByIdAndDelete(product_id);
-    response.status(200).send(deleteProduct);
-  } catch (error) {
-    response.status(400).send({ message: error._message });
-  }
-});
+// router.delete("/:id", isAdminMiddleware, async (request, response) => {
+//   try {
+//     const product_id = request.params.id;
+//     const deleteProduct = await User.findByIdAndDelete(product_id);
+//     response.status(200).send(deleteProduct);
+//   } catch (error) {
+//     response.status(400).send({ message: error._message });
+//   }
+// });
 
 module.exports = router;
