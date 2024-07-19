@@ -44,6 +44,9 @@ router.post("/", authMiddleware, async (request, response) => {
       request.body;
     const userId = request.user.id;
 
+    // Convert appointmentDate to a Date object if it's in string format
+    const appointmentDateUTC = new Date(appointmentDate);
+
     // Create a new calendar event
     const newCalendar = new Calendar2({
       title,
@@ -52,7 +55,7 @@ router.post("/", authMiddleware, async (request, response) => {
       staffId,
       user: userId,
       branch,
-      appointmentDate,
+      appointmentDate: appointmentDateUTC,
     });
 
     // Find the client by ID
@@ -73,7 +76,7 @@ router.post("/", authMiddleware, async (request, response) => {
     }
 
     // Find or create a new coaching entry for the user and client on the specified date
-    const coachingDate = new Date(appointmentDate).setHours(0, 0, 0, 0);
+    const coachingDate = new Date(appointmentDateUTC).setHours(0, 0, 0, 0);
     const existingCoaching = await Coaching.findOne({
       clientId,
       staffId,
