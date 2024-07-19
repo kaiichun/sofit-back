@@ -6,14 +6,14 @@ const User = require("../models/user.js");
 const authMiddleware = require("../middleware/auth.js");
 const Coaching = require("../models/coaching.js");
 
-// router.get("/", async (req, res) => {
-//   try {
-//     const events = await Calendar2.find({});
-//     res.status(200).json(events);
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
+router.get("/", async (req, res) => {
+  try {
+    const events = await Calendar2.find({});
+    res.status(200).json(events);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 router.get("/coaching", async (req, res) => {
   try {
@@ -24,19 +24,19 @@ router.get("/coaching", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
-  try {
-    const events = await Calendar2.find({});
-    res.status(200).json(
-      events.map((e) => {
-        e.appointmentDate = moment(e.appointmentDate).add(8, "hour");
-        return e;
-      })
-    );
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+// router.get("/", async (req, res) => {
+//   try {
+//     const events = await Calendar2.find({});
+//     res.status(200).json(
+//       events.map((e) => {
+//         e.appointmentDate = moment(e.appointmentDate).add(8, "hour");
+//         return e;
+//       })
+//     );
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// });
 
 router.post("/", authMiddleware, async (request, response) => {
   try {

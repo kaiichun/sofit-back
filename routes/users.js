@@ -104,4 +104,14 @@ router.put("/unlike/:postId", authMiddleware, async (request, response) => {
   }
 });
 
+router.delete("/:id", async (request, response) => {
+  try {
+    const user_id = request.params.id;
+    const deleteUser = await User.findByIdAndDelete(user_id);
+    response.status(200).send(deleteUser);
+  } catch (error) {
+    response.status(400).send({ message: error._message });
+  }
+});
+
 module.exports = router;
