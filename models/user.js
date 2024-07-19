@@ -52,7 +52,7 @@ const userSchema = new Schema(
       default: "-",
     },
     zip: {
-      type: Number,
+      type: String,
     },
     state: {
       type: String,
