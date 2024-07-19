@@ -5,7 +5,6 @@ const Calendar2 = require("../models/calendar.js");
 const User = require("../models/user.js");
 const authMiddleware = require("../middleware/auth.js");
 const Coaching = require("../models/coaching.js");
-const moment = require("moment-timezone");
 
 router.get("/", async (req, res) => {
   try {
@@ -44,6 +43,7 @@ router.post("/", authMiddleware, async (request, response) => {
     const { title, clientId, staffId, startTime, appointmentDate, branch } =
       request.body;
     const userId = request.user.id;
+
     // Create a new calendar event
     const newCalendar = new Calendar2({
       title,
@@ -53,7 +53,6 @@ router.post("/", authMiddleware, async (request, response) => {
       user: userId,
       branch,
       appointmentDate,
-      // : moment.tz(appointmentDate, "Asia/Kuala_Lumpur"),
     });
 
     // Find the client by ID
