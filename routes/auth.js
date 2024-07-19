@@ -2,6 +2,8 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
+const authMiddleware = require("../middleware/auth.js");
+const isAdminMiddleware = require("../middleware/isAdmin");
 
 const User = require("../models/user");
 
@@ -160,14 +162,13 @@ router.post("/login", async (request, response) => {
 
 router.post("/password", async (req, res) => {
   try {
-    const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
 
-    // Find the user by username or email combined
-    const user = await User.findOne({
-      $or: [{ username: username }, { email: email }],
-    });
+    const user = await User.findOne({ email: email });
+    if (!user) {
+      return res.status(400).send({ message: "Invalid email" });
+    }
 
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
     if (!isPasswordCorrect) {
@@ -186,6 +187,22 @@ router.post("/password", async (req, res) => {
     res.status(200).send(updatedUser);
   } catch (error) {
     res.status(400).send({ message: error._message });
+  }
+});
+
+router.post("/passwordadmin/:id", isAdminMiddleware, async (req, res) => {
+  try {
+    const newPassword = bcrypt.hashSync(req.body.password, 10);
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { password: newPassword },
+      { runValidators: true, new: true }
+    );
+    res.status(200).send(updatedUser);
+  } catch (error) {
+    res
+      .status(400)
+      .send({ message: error.message || "Error updating password" });
   }
 });
 
