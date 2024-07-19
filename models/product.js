@@ -20,6 +20,10 @@ const productSchema = new Schema({
     type: Number,
     required: true,
   },
+  commissionPercentage: {
+    type: Number,
+    required: true,
+  },
   price: {
     type: Number,
     required: true,

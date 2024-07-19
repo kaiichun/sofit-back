@@ -19,9 +19,14 @@ const calendar2Schema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  coachingId: {
+    // Ensure the field name is correct
+    type: Schema.Types.ObjectId,
+    ref: "Coaching",
+  },
   startTime: {
     type: String,
-    require: true,
+    required: true,
   },
   appointmentDate: {
     type: Date,

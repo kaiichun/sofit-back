@@ -40,6 +40,7 @@ router.post("/", isAdminMiddleware, async (request, response) => {
       price: request.body.price,
       store: request.body.store,
       commission: request.body.commission,
+      commissionPercentage: request.body.commissionPercentage,
       cost: request.body.cost,
       profit: request.body.profit,
       category: request.body.category,

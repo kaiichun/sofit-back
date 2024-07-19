@@ -88,7 +88,7 @@ const userSchema = new Schema(
       type: String,
     },
     salary: {
-      type: String,
+      type: Number,
     },
     department: {
       type: String,

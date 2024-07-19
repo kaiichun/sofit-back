@@ -38,46 +38,102 @@ router.get("/coaching", async (req, res) => {
 //   }
 // });
 
+// router.post("/", authMiddleware, async (request, response) => {
+//   try {
+//     const { title, clientId, staffId, startTime, appointmentDate, branch } =
+//       request.body;
+//     const userId = request.user.id;
+
+//     // Convert appointmentDate to a Date object if it's in string format
+//     const appointmentDateUTC = new Date(appointmentDate);
+
+//     // Create a new calendar event
+//     const newCalendar = new Calendar2({
+//       title,
+//       clientId,
+//       startTime,
+//       staffId,
+//       user: userId,
+//       branch,
+//       appointmentDate: appointmentDateUTC,
+//     });
+
+//     // Find the client by ID
+//     const client = await Client.findById(clientId);
+
+//     // Check if the client exists
+//     if (!client) {
+//       return response.status(404).json({ message: "Client not found" });
+//     }
+
+//     // Decrement the client's sessions count
+//     if (client.sessions > 0) {
+//       client.sessions--;
+//     } else {
+//       return response
+//         .status(400)
+//         .json({ message: "Please top up your package" });
+//     }
+
+//     // Find or create a new coaching entry for the user and client on the specified date
+//     const coachingDate = new Date(appointmentDateUTC).setHours(0, 0, 0, 0);
+//     const existingCoaching = await Coaching.findOne({
+//       clientId,
+//       staffId,
+//       date: coachingDate,
+//     });
+
+//     if (existingCoaching) {
+//       existingCoaching.sessions++;
+//       await existingCoaching.save();
+//     } else {
+//       const newCoaching = new Coaching({
+//         user: userId,
+//         staffId,
+//         clientId,
+//         date: coachingDate,
+//         sessions: 1,
+//       });
+//       await newCoaching.save();
+//     }
+
+//     // Save the new calendar event and update the client
+//     await Promise.all([newCalendar.save(), client.save()]);
+
+//     response.status(200).json({ message: "Session booked successfully" });
+//   } catch (error) {
+//     response.status(400).send({ message: error.message });
+//   }
+// });
+
 router.post("/", authMiddleware, async (request, response) => {
   try {
     const { title, clientId, staffId, startTime, appointmentDate, branch } =
       request.body;
     const userId = request.user.id;
 
-    // Convert appointmentDate to a Date object if it's in string format
     const appointmentDateUTC = new Date(appointmentDate);
+    console.log("appointmentDateUTC:", appointmentDateUTC);
 
-    // Create a new calendar event
-    const newCalendar = new Calendar2({
-      title,
-      clientId,
-      startTime,
-      staffId,
-      user: userId,
-      branch,
-      appointmentDate: appointmentDateUTC,
-    });
-
-    // Find the client by ID
     const client = await Client.findById(clientId);
-
-    // Check if the client exists
     if (!client) {
+      console.log("Client not found");
       return response.status(404).json({ message: "Client not found" });
     }
 
-    // Decrement the client's sessions count
     if (client.sessions > 0) {
       client.sessions--;
     } else {
+      console.log("Client sessions exhausted");
       return response
         .status(400)
         .json({ message: "Please top up your package" });
     }
 
-    // Find or create a new coaching entry for the user and client on the specified date
     const coachingDate = new Date(appointmentDateUTC).setHours(0, 0, 0, 0);
-    const existingCoaching = await Coaching.findOne({
+    console.log("coachingDate:", coachingDate);
+
+    let existingCoaching = await Coaching.findOne({
       clientId,
       staffId,
       date: coachingDate,
@@ -86,22 +142,37 @@ router.post("/", authMiddleware, async (request, response) => {
     if (existingCoaching) {
       existingCoaching.sessions++;
       await existingCoaching.save();
+      console.log("Updated existing coaching:", existingCoaching);
     } else {
-      const newCoaching = new Coaching({
+      existingCoaching = new Coaching({
         user: userId,
         staffId,
         clientId,
         date: coachingDate,
         sessions: 1,
       });
-      await newCoaching.save();
+      await existingCoaching.save();
+      console.log("Created new coaching:", existingCoaching);
     }
 
-    // Save the new calendar event and update the client
+    const newCalendar = new Calendar2({
+      title,
+      clientId,
+      startTime,
+      staffId,
+      user: userId,
+      branch,
+      appointmentDate: appointmentDateUTC,
+      coachingId: existingCoaching._id, // Pass the coachingId correctly
+    });
+
     await Promise.all([newCalendar.save(), client.save()]);
+
+    console.log("New calendar event created:", newCalendar);
 
     response.status(200).json({ message: "Session booked successfully" });
   } catch (error) {
+    console.log("Error:", error);
     response.status(400).send({ message: error.message });
   }
 });
@@ -141,7 +212,17 @@ router.put("/:id", authMiddleware, async (request, response) => {
       return response.status(404).json({ message: "Appointment not found" });
     }
 
-    // Update the calendar event fields
+    // Retrieve the coachingId from the calendar event
+    const coachingId = calendarEvent.coachingId;
+
+    // Find the coaching entry by its ID
+    const coachingEntry = await Coaching.findById(coachingId);
+
+    if (!coachingEntry) {
+      return response.status(404).json({ message: "Coaching entry not found" });
+    }
+
+    // Update the staffId in both calendarEvent and coachingEntry
     calendarEvent.title = title;
     calendarEvent.clientId = clientId;
     calendarEvent.staffId = staffId;
@@ -150,10 +231,14 @@ router.put("/:id", authMiddleware, async (request, response) => {
     calendarEvent.startTime = startTime;
     calendarEvent.branch = branch;
 
-    // Save the updated calendar event
-    await calendarEvent.save();
+    coachingEntry.staffId = staffId;
 
-    response.status(200).json({ message: "Appointment updated successfully" });
+    // Save both updated documents
+    await Promise.all([calendarEvent.save(), coachingEntry.save()]);
+
+    response
+      .status(200)
+      .json({ message: "Appointment and coaching updated successfully" });
   } catch (error) {
     response.status(400).send({ message: error.message });
   }
@@ -208,6 +293,14 @@ router.delete("/:id", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Event not found" });
     }
 
+    // Find the associated coaching entry
+    const coachingId = deletedEvent.coachingId;
+    const deletedCoaching = await Coaching.findByIdAndRemove(coachingId);
+
+    if (!deletedCoaching) {
+      return res.status(404).json({ message: "Coaching entry not found" });
+    }
+
     // Find the associated client
     const client = await Client.findById(deletedEvent.clientId);
 
@@ -222,7 +315,9 @@ router.delete("/:id", authMiddleware, async (req, res) => {
     await client.save();
 
     // Respond with success message
-    res.status(200).json("Event has been canceled, session restored");
+    res
+      .status(200)
+      .json("Event and coaching entry have been canceled, session restored");
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
