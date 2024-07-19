@@ -126,21 +126,36 @@ router.post("/staff-activity", authMiddleware, async (req, res) => {
 
 router.put("/:id", authMiddleware, async (request, response) => {
   try {
-    const clientID = await Calendar2.findById(request.params.id).populate(
-      "user"
-    );
+    const { id } = request.params;
+    const { title, clientId, staffId, startTime, appointmentDate, branch } =
+      request.body;
+    const userId = request.user.id;
 
-    const updatedClientBmi = await Calendar2.findByIdAndUpdate(
-      clientID,
-      request.body,
-      {
-        new: true,
-      }
-    );
+    // Convert appointmentDate to a Date object if it's in string format
+    const appointmentDateUTC = new Date(appointmentDate);
 
-    response.status(200).send(updatedClientBmi);
+    // Find the calendar event by ID
+    const calendarEvent = await Calendar2.findById(id);
+
+    if (!calendarEvent) {
+      return response.status(404).json({ message: "Appointment not found" });
+    }
+
+    // Update the calendar event fields
+    calendarEvent.title = title;
+    calendarEvent.clientId = clientId;
+    calendarEvent.staffId = staffId;
+    calendarEvent.user = userId;
+    calendarEvent.appointmentDate = appointmentDateUTC;
+    calendarEvent.startTime = startTime;
+    calendarEvent.branch = branch;
+
+    // Save the updated calendar event
+    await calendarEvent.save();
+
+    response.status(200).json({ message: "Appointment updated successfully" });
   } catch (error) {
-    response.status(400).send({ message: error._message });
+    response.status(400).send({ message: error.message });
   }
 });
 

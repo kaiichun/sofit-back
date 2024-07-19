@@ -36,13 +36,13 @@ const userSchema = new Schema(
       default: "Single",
     },
     phonenumber: {
-      type: Number,
+      type: String,
     },
     staffemergencycontactname: {
       type: String,
     },
     staffemergencycontact: {
-      type: Number,
+      type: String,
     },
     address1: {
       type: String,
@@ -91,7 +91,7 @@ const userSchema = new Schema(
       type: String,
     },
     salary: {
-      type: Number,
+      type: String,
     },
     department: {
       type: String,
