@@ -28,12 +28,10 @@ const userSchema = new Schema(
     gender: {
       type: String,
       enum: ["Male", "Female"],
-      default: "Male",
     },
     relationship: {
       type: String,
       enum: ["Single", "In love", "Married", "Widowed", "Others"],
-      default: "Single",
     },
     phonenumber: {
       type: String,
@@ -73,7 +71,6 @@ const userSchema = new Schema(
         "Sabah",
         "Sarawak",
       ],
-      default: "Selangor",
     },
     image: {
       type: String,
@@ -106,7 +103,6 @@ const userSchema = new Schema(
         "Accounting",
         "Other",
       ],
-      default: "Junior Trainee",
     },
     branch: {
       type: Schema.Types.ObjectId,
@@ -115,7 +111,6 @@ const userSchema = new Schema(
     role: {
       type: String,
       enum: ["Staff", "Supervisor", "Manager", "Admin HQ", "Admin Branch"],
-      default: "Staff",
     },
     active: {
       type: Boolean,
