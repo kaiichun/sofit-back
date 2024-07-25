@@ -173,7 +173,8 @@ const clientSchema = new Schema(
     packageValidityPeriod: { type: Date, default: new Date() },
     totalSpend: { type: Number, default: 0 },
     coachId: {
-      type: String,
+      type: Schema.Types.ObjectId, // Assuming coachId is a reference to a User document
+      ref: "User",
     },
     coachName: {
       type: String,
