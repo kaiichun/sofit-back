@@ -13,12 +13,23 @@ const Wage = require("../models/wage.js");
 const PMS = require("../models/pms.js");
 const Order = require("../models/order.js");
 
-router.get("/:id", authMiddleware, async (request, response) => {
+// router.get("/:id", authMiddleware, async (request, response) => {
+//   try {
+//     const data = await Wage.findOne({ _id: request.params.id });
+//     response.status(200).send(data);
+//   } catch (error) {
+//     response.status(400).send({ message: "Order not found" });
+//   }
+// });
+
+router.get("/:id", async (request, response) => {
   try {
-    const data = await Wage.findOne({ _id: request.params.id });
+    const data = await Wage.findOne({ _id: request.params.id }).populate(
+      "user"
+    );
     response.status(200).send(data);
   } catch (error) {
-    response.status(400).send({ message: "Order not found" });
+    response.status(400).send({ message: error._message });
   }
 });
 
@@ -112,6 +123,19 @@ router.post("/", isAdminMiddleware, async (request, response) => {
     response.status(200).send(newStaffWage);
   } catch (error) {
     response.status(400).send({ message: error.message });
+  }
+});
+
+router.put("/:id", isAdminMiddleware, async (request, response) => {
+  try {
+    const wage_id = request.params.id;
+
+    const updatedWgae = await Wage.findByIdAndUpdate(wage_id, request.body, {
+      new: true,
+    });
+    response.status(200).send(updatedWgae);
+  } catch (error) {
+    response.status(400).send({ message: error._message });
   }
 });
 

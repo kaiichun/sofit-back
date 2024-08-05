@@ -16,7 +16,8 @@ const wageSchema = new Schema(
       ref: "PMS",
     },
     staffId: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "User",
     },
     payslipNo: {
       type: String,
